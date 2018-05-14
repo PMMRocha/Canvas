@@ -24,6 +24,11 @@ class Circle {
     this.context.fillStyle = this.colorSchema[this.randomColorIndex];
     this.context.fill();
   }
+
+  public move(): void {
+    // this.x--;
+    this.draw();
+  }
 }
 
 @Component({
@@ -61,7 +66,9 @@ export class CanvasComponent implements OnInit {
       const randomX: number = Math.random() * window.innerWidth;
       const randomY: number = Math.random() * window.innerHeight;
       const randomRadius: number = Math.random() * 50;
-      circles.push(new Circle(randomX, randomY, randomRadius, this.context));
+      const circle: Circle = new Circle(randomX, randomY, randomRadius, this.context);
+      // circle.draw();
+      circles.push(circle);
     }
     return circles;
   }
@@ -71,7 +78,7 @@ export class CanvasComponent implements OnInit {
     // clear canvas
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     this.circles.forEach(
-      (circle: Circle) => circle.draw()
+      (circle: Circle) => circle.move()
     );
   }
 
