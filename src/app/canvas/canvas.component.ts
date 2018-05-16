@@ -9,10 +9,12 @@ class Circle {
   private colorSchema: string[];
   private randomColorIndex: number;
   constructor(
-    public x: number = 100,
-    public y: number = 100,
-    public radius: number = 50,
-    public context: CanvasRenderingContext2D
+    private x: number = 100,
+    private y: number = 100,
+    private dx: number = 3,
+    private dy: number = 3,
+    private radius: number = 50,
+    private context: CanvasRenderingContext2D
   ) {
     this.colorSchema = [ '#FF530D', '#E82C0C', '#FF0000', '#E80C7A', '#FF0DFF', '#FFFFFF' ];
     this.randomColorIndex = Math.floor(Math.random() * this.colorSchema.length);
@@ -26,7 +28,20 @@ class Circle {
   }
 
   public move(): void {
-    // this.x--;
+    const hasHitLeftWall: boolean = this.x - this.radius < 0;
+    const hasHitRightWall: boolean = this.x + this.radius > window.innerWidth;
+    const hasHitTopWall: boolean = this.y - this.radius < 0;
+    const hasHitBottomWall: boolean = this.y + this.radius > window.innerHeight;
+    // check if circle has touched the edge of the screen
+    if (hasHitRightWall || hasHitLeftWall) {
+      this.dx = -this.dx;
+    } else if (hasHitTopWall || hasHitBottomWall) {
+      this.dy = -this.dy;
+    }
+    // move horizontally
+    this.x += this.dx;
+    // move vertically
+    this.y += this.dy;
     this.draw();
   }
 }
@@ -65,8 +80,10 @@ export class CanvasComponent implements OnInit {
     for (let index = 0; index < this.numberOfCircles; index++) {
       const randomX: number = Math.random() * window.innerWidth;
       const randomY: number = Math.random() * window.innerHeight;
+      const randomDX: number = Math.random() * 5;
+      const randomDY: number = Math.random() * 5;
       const randomRadius: number = Math.random() * 50;
-      const circle: Circle = new Circle(randomX, randomY, randomRadius, this.context);
+      const circle: Circle = new Circle(randomX, randomY, randomDX, randomDY, randomRadius, this.context);
       // circle.draw();
       circles.push(circle);
     }
@@ -77,9 +94,8 @@ export class CanvasComponent implements OnInit {
     this.ngZone.runOutsideAngular(() => requestAnimationFrame(this.animate.bind(this)));
     // clear canvas
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    this.circles.forEach(
-      (circle: Circle) => circle.move()
-    );
+    // animate circles
+    this.circles.forEach((circle: Circle) => circle.move());
   }
 
 }
