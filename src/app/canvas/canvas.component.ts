@@ -1,3 +1,5 @@
+import { Position } from './../classes/position.class';
+import { Circle } from './../classes/circle.class';
 import {
   Component,
   OnInit,
@@ -6,9 +8,7 @@ import {
   Input,
   NgZone
 } from "@angular/core";
-import { Circle } from "../models/circle.model";
 import { defaultCircleColors } from "../utils/circle-colors.utils";
-import { MousePosition } from "../models/mouse-position.model";
 
 @Component({
   selector: "app-canvas",
@@ -21,7 +21,7 @@ export class CanvasComponent implements OnInit {
   @Input() private circleColors: string[] = defaultCircleColors;;
   private canvas: HTMLCanvasElement;
   private context: CanvasRenderingContext2D;
-  private mousePosition: MousePosition;
+  private mousePosition: Position;
   private circles: Circle[];
 
   constructor(public ngZone: NgZone) {}
@@ -36,26 +36,27 @@ export class CanvasComponent implements OnInit {
   }
 
   public onMouseOver(event: MouseEvent): void {
-    this.mousePosition = new MousePosition(event.clientX, event.clientY);
+    this.mousePosition = new Position(event.clientX, event.clientY);
   }
 
   private createCircles(): Circle[] {
     const circles: Circle[] = [];
+    const dRange: number = 3;
     for (let index = 0; index < this.numberOfCircles; index++) {
-      const randomRadius: number = Math.floor(Math.random() * 50 + 1);
-      const randomX: number =Math.floor( Math.random() * window.innerWidth);
+      const radius: number = Math.floor(Math.random() * 50 + 1);
+      const randomX: number = Math.floor(Math.random() * window.innerWidth);
       const randomY: number = Math.floor(Math.random() * window.innerHeight);
-      const randomDX: number = Math.floor(Math.random() + 3 * -0.5);
-      const randomDY: number = Math.floor(Math.random() + 3 * -0.5);
+      const randomDX: number = Math.random() * (dRange - (-dRange)) + (-dRange);
+      const randomDY: number = Math.random() * (dRange - (-dRange)) + (-dRange);
       const randomColorIndex = Math.floor(Math.random() * this.circleColors.length);
       const circle: Circle = new Circle(
         this.context,
         randomX,
         randomY,
+        this.circleColors[randomColorIndex],
+        radius,
         randomDX,
-        randomDY,
-        randomRadius,
-        this.circleColors[randomColorIndex]
+        randomDY
       );
       circles.push(circle);
     }
@@ -69,7 +70,7 @@ export class CanvasComponent implements OnInit {
     // clear canvas
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     // animate circles
-    this.circles.forEach((circle: Circle) => circle.animate(this.mousePosition));
+    this.circles.forEach((circle: Circle) => circle.move(this.mousePosition));
     delete this.mousePosition;
   }
 }
