@@ -1,7 +1,7 @@
 import { Position } from "./position.class";
 import { AnimatedShape } from "./animated-shape.class";
 export class Circle extends AnimatedShape {
-	private minRadius: number;
+	private defaultRadius: number;
 	private maxRadius: number;
 	constructor(
 		private context: CanvasRenderingContext2D,
@@ -13,27 +13,20 @@ export class Circle extends AnimatedShape {
 		dy: number = 3
 	) {
 		super(x, y, radius * 2, radius * 2, color, dx, dy);
-		this.minRadius = this.radius;
-		this.maxRadius = this.radius * 2;
+		this.defaultRadius = this.radius;
+        this.maxRadius = this.radius * 2;
+        this.draw();
 	}
 
-	public draw(): void {
-		this.context.beginPath();
-		this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
-		this.context.fillStyle = this.backgroundColor;
-		this.context.fill();
+	public move(): Circle {
+        // assign new coordinates
+        this.updatePosition();
+        // redraw on canvas at the coordinates
+        this.draw();
+        return this;
 	}
 
-	public move(mousePosition: Position): void {
-		this.updatePosition();
-
-		// if mouse over, increase radius
-		this.radius = this.resizeOnMousseOver(mousePosition);
-
-		this.draw();
-	}
-
-	private resizeOnMousseOver(mousePosition: Position): number {
+	public resizeOnMousseOver(mousePosition: Position): Circle {
 		const ratio: number = 2;
 		const resize: number = 3;
 		if (
@@ -43,13 +36,21 @@ export class Circle extends AnimatedShape {
 			mousePosition.posY > this.y - this.radius * ratio &&
 			mousePosition.posY < this.y + this.radius * ratio
 		) {
-			return this.radius >= this.maxRadius
+			this.radius = this.radius >= this.maxRadius
 				? this.maxRadius
 				: this.radius + resize;
 		} else {
-			return this.radius <= this.minRadius
-				? this.minRadius
+			this.radius = this.radius <= this.defaultRadius
+				? this.defaultRadius
 				: this.radius - resize;
 		}
+        return this;
+	}
+
+	private draw(): void {
+		this.context.beginPath();
+		this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+		this.context.fillStyle = this.backgroundColor;
+		this.context.fill();
 	}
 }

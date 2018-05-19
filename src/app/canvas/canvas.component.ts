@@ -70,7 +70,9 @@ export class CanvasComponent implements OnInit {
     // clear canvas
     this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
     // animate circles
-    this.circles.forEach((circle: Circle) => circle.move(this.mousePosition));
+    this.circles.forEach(
+        (circle: Circle) => circle.resizeOnMousseOver(this.mousePosition).move()
+    );
     delete this.mousePosition;
   }
 }
