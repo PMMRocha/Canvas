@@ -1,8 +1,7 @@
 import { Position } from "./position.class";
 import { AnimatedShape } from "./animated-shape.class";
+import { Size } from "./size.class";
 export class Circle extends AnimatedShape {
-	private defaultRadius: number;
-	private maxRadius: number;
 	constructor(
 		private context: CanvasRenderingContext2D,
 		x: number = 100,
@@ -10,11 +9,15 @@ export class Circle extends AnimatedShape {
 		color: string = "#598C17",
 		private radius: number = 50,
 		dx: number = 3,
-		dy: number = 3
+        dy: number = 3,
+        maxWidth: number = radius * 4,
+        maxHeight: number = radius * 4
 	) {
-		super(x, y, radius * 2, radius * 2, color, dx, dy);
-		this.defaultRadius = this.radius;
-        this.maxRadius = this.radius * 2;
+		super(
+            x, y,
+            new Size(radius * 2, radius * 2, maxWidth, maxHeight),
+            color, dx, dy
+        );
         this.draw();
 	}
 
@@ -31,25 +34,27 @@ export class Circle extends AnimatedShape {
 		const resize: number = 3;
 		if (
 			mousePosition &&
-			mousePosition.posX > this.x - this.radius * ratio &&
-			mousePosition.posX < this.x + this.radius * ratio &&
-			mousePosition.posY > this.y - this.radius * ratio &&
-			mousePosition.posY < this.y + this.radius * ratio
+			mousePosition.posX > this.x - (this.size.width / 2) * ratio &&
+			mousePosition.posX < this.x + (this.size.width / 2) * ratio &&
+			mousePosition.posY > this.y - (this.size.height / 2) * ratio &&
+			mousePosition.posY < this.y + (this.size.height / 2) * ratio
 		) {
-			this.radius = this.radius >= this.maxRadius
-				? this.maxRadius
-				: this.radius + resize;
+			// this.size.width = this.radius >= this.maxRadius
+			// 	? this.maxRadius
+            //     : this.radius + resize;
+            this.size.increse(resize);
 		} else {
-			this.radius = this.radius <= this.defaultRadius
-				? this.defaultRadius
-				: this.radius - resize;
+			// this.radius = this.radius <= this.defaultRadius
+			// 	? this.defaultRadius
+            //     : this.radius - resize;
+            this.size.decrease(resize);
 		}
         return this;
 	}
 
 	private draw(): void {
 		this.context.beginPath();
-		this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+		this.context.arc(this.x, this.y, this.size.width / 2, 0, 2 * Math.PI, false);
 		this.context.fillStyle = this.backgroundColor;
 		this.context.fill();
 	}

@@ -1,15 +1,15 @@
 import { Shape } from "./shape.class";
+import { Size } from "./size.class";
 export class AnimatedShape extends Shape {
   constructor(
     x: number = 100,
     y: number = 100,
-    w: number = 100,
-    h: number = 100,
+    size: Size,
     color: string = "#598C17",
     protected dx: number = 3,
     protected dy: number = 3
   ) {
-    super(x, y, w, h, color);
+    super(x, y, size, color);
   }
 
   protected updatePosition(): void {
