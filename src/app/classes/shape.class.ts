@@ -1,82 +1,56 @@
 import { Size } from "./size.class";
+import { Position } from "./position.class";
 
 export class Shape {
   constructor(
-	protected x: number,
-    protected y: number,
+	protected position: Position,
     protected size: Size,
-	// protected width: number,
-	// protected height: number,
 	protected backgroundColor: string = "black",
-	// protected maxWidth: number = null,
-	// protected maxHeight: number = null,
-	// protected minWidth: number = null,
-	// protected minHeight: number = null
+    protected dx: number = 3,
+    protected dy: number = 3
   ) {
 	this.repositionIfStuckOnWalls();
   }
 
-  // increse Size
-//   protected increse( width: number, height?: number ): void {
-// 	this.size.increse(width, height);
-//   }
-
-//   protected increaseWidth( additionalWidth: number ): void {
-// 	if (this.width >= this.maxWidth) {
-// 	  return;
-// 	}
-// 	this.width += additionalWidth;
-//   }
-
-//   protected increaseHeight( additionalHeight: number ): void {
-// 	if (this.height >= this.maxHeight) {
-// 	  return;
-// 	}
-// 	this.height += additionalHeight;
-//   }
-
-//   // decrease Size
-//   protected decrease( width: number, height?: number ): void {
-// 	this.decreaseWidth(width);
-// 	this.decreaseHeight(height ? height : width);
-//   }
-
-//   protected decreaseWidth( fewerWidth: number ): void {
-// 	if (this.width <= this.minWidth) {
-// 	  return;
-// 	}
-// 	this.width -= fewerWidth;
-//   }
-
-//   protected decreaseHeight( fewerHeight: number ): void {
-// 	if (this.height <= this.minHeight) {
-// 	  return;
-// 	}
-// 	this.height -= fewerHeight;
-//   }
-
-  protected hasHitLeftWall(): boolean {
-	  return this.x - (this.size.width / 2) <= 0;
+  protected updatePosition(): void {
+    this.bounceOffWalls();
+    // move horizontally
+    this.position.moveX(this.dx);
+    // move vertically
+    this.position.moveY(this.dy);
   }
 
-  protected hasHitRightWall() {
-	  return this.x + (this.size.width / 2) >= window.innerWidth;
-  }
-
-  protected hasHitTopWall(): boolean {
-	  return this.y - (this.size.height / 2) <= 0;
-  }
-
-  protected hasHitBottomWall(): boolean {
-	  return this.y + (this.size.height / 2) >= window.innerHeight;
+  private bounceOffWalls(): void {
+    if (this.hasHitTopWall() || this.hasHitBottomWall()) {
+      this.dy = -this.dy;
+    }
+    if (this.hasHitRightWall() || this.hasHitLeftWall()) {
+      this.dx = -this.dx;
+    }
   }
 
   private repositionIfStuckOnWalls(): void {
 	  if (this.hasHitBottomWall() || this.hasHitTopWall()) {
-		  this.y = window.innerHeight / 2;
+		  this.position.y = window.innerHeight / 2;
 	  }
 	  if (this.hasHitRightWall() || this.hasHitLeftWall()) {
-		  this.x = window.innerWidth / 2;
+		  this.position.x = window.innerWidth / 2;
 	  }
+  }
+
+  private hasHitLeftWall(): boolean {
+	  return this.position.x - (this.size.width / 2) <= 0;
+  }
+
+  private hasHitRightWall() {
+	  return this.position.x + (this.size.width / 2) >= window.innerWidth;
+  }
+
+  private hasHitTopWall(): boolean {
+	  return this.position.y - (this.size.height / 2) <= 0;
+  }
+
+  private hasHitBottomWall(): boolean {
+	  return this.position.y + (this.size.height / 2) >= window.innerHeight;
   }
 }

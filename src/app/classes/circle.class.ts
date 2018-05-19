@@ -1,7 +1,7 @@
 import { Position } from "./position.class";
-import { AnimatedShape } from "./animated-shape.class";
 import { Size } from "./size.class";
-export class Circle extends AnimatedShape {
+import { Shape } from "./shape.class";
+export class Circle extends Shape {
 	constructor(
 		private context: CanvasRenderingContext2D,
 		x: number = 100,
@@ -14,7 +14,7 @@ export class Circle extends AnimatedShape {
         maxHeight: number = radius * 4
 	) {
 		super(
-            x, y,
+            new Position(x, y),
             new Size(radius * 2, radius * 2, maxWidth, maxHeight),
             color, dx, dy
         );
@@ -34,10 +34,10 @@ export class Circle extends AnimatedShape {
 		const resize: number = 3;
 		if (
 			mousePosition &&
-			mousePosition.posX > this.x - (this.size.width / 2) * ratio &&
-			mousePosition.posX < this.x + (this.size.width / 2) * ratio &&
-			mousePosition.posY > this.y - (this.size.height / 2) * ratio &&
-			mousePosition.posY < this.y + (this.size.height / 2) * ratio
+			mousePosition.x > this.position.x - (this.size.width / 2) * ratio &&
+			mousePosition.x < this.position.x + (this.size.width / 2) * ratio &&
+			mousePosition.y > this.position.y - (this.size.height / 2) * ratio &&
+			mousePosition.y < this.position.y + (this.size.height / 2) * ratio
 		) {
 			// this.size.width = this.radius >= this.maxRadius
 			// 	? this.maxRadius
@@ -54,7 +54,7 @@ export class Circle extends AnimatedShape {
 
 	private draw(): void {
 		this.context.beginPath();
-		this.context.arc(this.x, this.y, this.size.width / 2, 0, 2 * Math.PI, false);
+		this.context.arc(this.position.x, this.position.y, this.size.width / 2, 0, 2 * Math.PI, false);
 		this.context.fillStyle = this.backgroundColor;
 		this.context.fill();
 	}
