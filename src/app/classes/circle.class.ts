@@ -1,9 +1,9 @@
 import { Position } from "./position.class";
 import { Size } from "./size.class";
 import { Shape } from "./shape.class";
+import { IShape } from "../utils/IShape.interface";
 
-export class Circle extends Shape {
-
+export class Circle extends Shape implements IShape<Circle> {
 	constructor(
 		private context: CanvasRenderingContext2D,
 		x: number = 100,
