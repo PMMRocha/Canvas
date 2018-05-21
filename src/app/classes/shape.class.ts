@@ -1,56 +1,44 @@
+import { Circle } from "./circle.class";
 import { Size } from "./size.class";
 import { Position } from "./position.class";
 
 export class Shape {
-  constructor(
-	protected position: Position,
-    protected size: Size,
-	protected backgroundColor: string = "black",
-    protected dx: number = 3,
-    protected dy: number = 3
-  ) {
-	this.repositionIfStuckOnWalls();
-  }
+	constructor(
+		protected position: Position,
+		protected size: Size,
+		protected backgroundColor: string = "black",
+		protected dx: number = 3,
+		protected dy: number = 3
+    ) {}
 
-  protected updatePosition(): void {
-    this.bounceOffWalls();
-    // move horizontally
-    this.position.moveX(this.dx);
-    // move vertically
-    this.position.moveY(this.dy);
-  }
+	protected move(): void {
+		// move horizontally
+		this.position.moveX(this.dx);
+		// move vertically
+		this.position.moveY(this.dy);
+	}
 
-  private bounceOffWalls(): void {
-    if (this.hasHitTopWall() || this.hasHitBottomWall()) {
-      this.dy = -this.dy;
+	protected bounceOffWalls(): void {
+		if (
+			this.position.hasHitTopWall() ||
+			this.position.hasHitBottomWall()
+		) {
+			this.dy = -this.dy;
+		}
+		if (
+			this.position.hasHitRightWall() ||
+			this.position.hasHitLeftWall()
+		) {
+			this.dx = -this.dx;
+		}
     }
-    if (this.hasHitRightWall() || this.hasHitLeftWall()) {
-      this.dx = -this.dx;
+    
+    protected resizeOnMouseOver(mousePosition: Position): void {
+        const resize: number = 3;
+		if (this.position.isWithinMouseRange(mousePosition, this.size)) {
+			this.size.increse(resize);
+		} else {
+			this.size.decrease(resize);
+		}
     }
-  }
-
-  private repositionIfStuckOnWalls(): void {
-	  if (this.hasHitBottomWall() || this.hasHitTopWall()) {
-		  this.position.y = window.innerHeight / 2;
-	  }
-	  if (this.hasHitRightWall() || this.hasHitLeftWall()) {
-		  this.position.x = window.innerWidth / 2;
-	  }
-  }
-
-  private hasHitLeftWall(): boolean {
-	  return this.position.x - (this.size.width / 2) <= 0;
-  }
-
-  private hasHitRightWall() {
-	  return this.position.x + (this.size.width / 2) >= window.innerWidth;
-  }
-
-  private hasHitTopWall(): boolean {
-	  return this.position.y - (this.size.height / 2) <= 0;
-  }
-
-  private hasHitBottomWall(): boolean {
-	  return this.position.y + (this.size.height / 2) >= window.innerHeight;
-  }
 }
