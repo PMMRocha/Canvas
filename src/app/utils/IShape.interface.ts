@@ -1,4 +1,5 @@
 import { Position } from "../classes/position.class";
+import { Size } from "../classes/size.class";
 
 export interface IShape<T> {
     draw(): T;
