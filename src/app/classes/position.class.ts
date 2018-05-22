@@ -1,4 +1,4 @@
-import { Size } from "./size.class";
+import { Size } from './size.class';
 
 export class Position {
     constructor(
@@ -15,7 +15,7 @@ export class Position {
     public hasRadius(): boolean {
         return this._radius > 0;
     }
-    
+
     public moveX( offset: number ): void { this._x += offset; }
 
     public moveY( offset: number ): void { this._y += offset; }
@@ -23,21 +23,21 @@ export class Position {
     public hasHitLeftWall(): boolean {
       return this._x - this._radius <= 0;
     }
-  
+
     public hasHitRightWall() {
         return this._x + this._radius >= window.innerWidth;
     }
-  
+
     public hasHitTopWall(): boolean {
         return this._y - this._radius <= 0;
     }
-  
+
     public hasHitBottomWall(): boolean {
         return this._y + this._radius >= window.innerHeight;
     }
 
     public isWithinMouseRange(mousePosition: Position, range: Size): boolean {
-        if(!mousePosition) { return false; }
+        if (!mousePosition) { return false; }
         const pointX_1: number = this.hasRadius() ? this._x - this._radius : this._x;
         const pointY_1: number = this.hasRadius() ? this._y - this._radius : this._y;
         const pointX_2: number = this.hasRadius() ? pointX_1 + range.width : range.width;

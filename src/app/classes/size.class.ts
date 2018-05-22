@@ -6,11 +6,11 @@ export class Size {
 		private _maxWidth: number,
 		private _maxHeight: number,
 	) {
-        this.initialSize = { width: _width, height:_height};
+        this.initialSize = { width: _width, height: _height};
     }
 
-    get width() { return this._width }
-    get height() { return this._height }
+    get width() { return this._width; }
+    get height() { return this._height; }
 
 	// increse Size
 	public increse(width: number, height?: number): void {

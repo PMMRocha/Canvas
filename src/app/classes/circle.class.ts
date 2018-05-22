@@ -1,14 +1,14 @@
-import { Position } from "./position.class";
-import { Size } from "./size.class";
-import { Shape } from "./shape.class";
-import { IShape } from "../utils/IShape.interface";
+import { Position } from './position.class';
+import { Size } from './size.class';
+import { Shape } from './shape.class';
+import { IShape } from '../utils/IShape.interface';
 
 export class Circle extends Shape implements IShape<Circle> {
 	constructor(
 		private context: CanvasRenderingContext2D,
 		x: number = 100,
 		y: number = 100,
-		backgroundColor: string = "#598C17",
+		backgroundColor: string = '#598C17',
 		radius: number = 50,
 		dx: number = 3,
 		dy: number = 3,

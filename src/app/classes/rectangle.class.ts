@@ -1,14 +1,14 @@
-import { Shape } from "./shape.class";
-import { IShape } from "../utils/IShape.interface";
-import { Position } from "./position.class";
-import { Size } from "./size.class";
+import { Shape } from './shape.class';
+import { IShape } from '../utils/IShape.interface';
+import { Position } from './position.class';
+import { Size } from './size.class';
 
 export class Rectangle extends Shape implements IShape<Rectangle> {
     constructor(
         private context: CanvasRenderingContext2D,
         x: number = 100,
 		y: number = 100,
-		backgroundColor: string = "#598C17",
+		backgroundColor: string = '#598C17',
 		width: number = 50,
 		height: number = 50,
 		dx: number = 3,

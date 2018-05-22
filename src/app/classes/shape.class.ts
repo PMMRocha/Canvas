@@ -1,12 +1,12 @@
-import { Circle } from "./circle.class";
-import { Size } from "./size.class";
-import { Position } from "./position.class";
+import { Circle } from './circle.class';
+import { Size } from './size.class';
+import { Position } from './position.class';
 
 export class Shape {
 	constructor(
 		protected position: Position,
 		protected size: Size,
-		protected backgroundColor: string = "black",
+		protected backgroundColor: string = 'black',
 		protected dx: number = 3,
 		protected dy: number = 3
     ) {}
@@ -32,9 +32,9 @@ export class Shape {
 			this.dx = -this.dx;
 		}
     }
-    
+
     protected resizeOnMouseOver(mousePosition: Position): void {
-        const resize: number = 3;
+        const resize = 3;
 		if (this.position.isWithinMouseRange(mousePosition, this.size)) {
 			this.size.increse(resize);
 		} else {
