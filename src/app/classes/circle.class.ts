@@ -16,7 +16,7 @@ export class Circle extends Shape implements IShape<Circle> {
 		maxHeight: number = radius * 4
 	) {
 		super(
-			new Position(x, y, radius),
+			new Position(x - radius, y - radius),
 			new Size(radius * 2, radius * 2, maxWidth, maxHeight),
 			backgroundColor,
 			dx,
@@ -27,8 +27,8 @@ export class Circle extends Shape implements IShape<Circle> {
 	public draw(): Circle {
 		this.context.beginPath();
 		this.context.arc(
-			this.position.x,
-			this.position.y,
+			this.position.x + (this.size.width / 2),
+			this.position.y + (this.size.height / 2),
 			this.size.width / 2,
 			0,
 			2 * Math.PI,

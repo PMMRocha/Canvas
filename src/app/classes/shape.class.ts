@@ -9,7 +9,9 @@ export class Shape {
 		protected backgroundColor: string = 'black',
 		protected dx: number = 3,
 		protected dy: number = 3
-    ) {}
+    ) {
+		this.position.repositionIfStuckOnWalls(this.size);
+    }
 
 	protected move(): void {
 		// move horizontally
@@ -21,12 +23,12 @@ export class Shape {
 	protected bounceOffWalls(): void {
 		if (
 			this.position.hasHitTopWall() ||
-			this.position.hasHitBottomWall()
+			this.position.hasHitBottomWall(this.size.height)
 		) {
 			this.dy = -this.dy;
 		}
 		if (
-			this.position.hasHitRightWall() ||
+			this.position.hasHitRightWall(this.size.width) ||
 			this.position.hasHitLeftWall()
 		) {
 			this.dx = -this.dx;
@@ -34,11 +36,18 @@ export class Shape {
     }
 
     protected resizeOnMouseOver(mousePosition: Position): void {
-        const resize = 3;
-		if (this.position.isWithinMouseRange(mousePosition, this.size)) {
+        const resize: number = 3;
+        const range: number = 100;
+        if (
+            mousePosition &&
+			mousePosition.x > this.position.x - range &&
+			mousePosition.x < (this.position.x + this.size.width) + range &&
+			mousePosition.y > this.position.y - range &&
+			mousePosition.y < (this.position.y + this.size.height) + range
+		) {
 			this.size.increse(resize);
-		} else {
+        } else {
 			this.size.decrease(resize);
-		}
+        }
     }
 }

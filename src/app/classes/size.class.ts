@@ -4,18 +4,18 @@ export class Size {
 		private _width: number,
 		private _height: number,
 		private _maxWidth: number,
-		private _maxHeight: number,
+        private _maxHeight: number
 	) {
         this.initialSize = { width: _width, height: _height};
     }
-
+    
     get width() { return this._width; }
     get height() { return this._height; }
 
 	// increse Size
 	public increse(width: number, height?: number): void {
 		this.increaseWidth(width);
-		this.increaseHeight(height ? height : width);
+		this.increaseHeight(height | width);
 	}
 
 	public increaseWidth(additionalWidth: number): void {
@@ -35,7 +35,7 @@ export class Size {
 	// decrease Size
 	public decrease(width: number, height?: number): void {
 		this.decreaseWidth(width);
-		this.decreaseHeight(height ? height : width);
+		this.decreaseHeight(height | width);
 	}
 
 	public decreaseWidth(fewerWidth: number): void {

@@ -27,7 +27,12 @@ export class Rectangle extends Shape implements IShape<Rectangle> {
 
     public draw(): Rectangle {
         this.context.beginPath();
-		this.context.rect(this.position.x, this.position.y, this.size.width, this.size.height);
+		this.context.rect(
+            this.position.x,
+            this.position.y,
+            this.size.width,
+            this.size.height
+        );
 		this.context.fillStyle = this.backgroundColor;
 		this.context.fill();
 		return this;
