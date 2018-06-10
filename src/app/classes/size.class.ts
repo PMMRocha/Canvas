@@ -8,9 +8,14 @@ export class Size {
 	) {
         this.initialSize = { width: _width, height: _height};
     }
-    
+
     get width() { return this._width; }
     get height() { return this._height; }
+
+    public scale(factor: number): void {
+	    this._width  = this.initialSize.width * factor;
+	    this._height = this.initialSize.height * factor;
+    }
 
 	// increse Size
 	public increse(width: number, height?: number): void {

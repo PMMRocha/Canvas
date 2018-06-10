@@ -1,6 +1,6 @@
-import { Rectangle } from "./../classes/rectangle.class";
-import { Position } from "./../classes/position.class";
-import { Circle } from "./../classes/circle.class";
+import { Rectangle } from './../classes/rectangle.class';
+import { Position } from './../classes/position.class';
+import { Circle } from './../classes/circle.class';
 import {
 	Component,
 	OnInit,
@@ -8,16 +8,17 @@ import {
 	ElementRef,
 	Input,
 	NgZone
-} from "@angular/core";
-import { defaultCircleColors, E_Shape } from "../utils/shape.utils";
+} from '@angular/core';
+import { defaultCircleColors, E_Shape } from '../utils/shape.utils';
+import {E} from '@angular/core/src/render3';
 
 @Component({
-	selector: "app-canvas",
-	templateUrl: "./canvas.component.html",
-	styleUrls: ["./canvas.component.scss"]
+	selector: 'app-canvas',
+	templateUrl: './canvas.component.html',
+	styleUrls: ['./canvas.component.scss']
 })
 export class CanvasComponent implements OnInit {
-	@ViewChild("canvas") public canvasRef: ElementRef;
+	@ViewChild('canvas') public canvasRef: ElementRef;
 	@Input() private numberOfCircles = 400;
 	@Input() private numberOfRectangles = 400;
 	@Input() private colors: string[] = defaultCircleColors;
@@ -26,18 +27,24 @@ export class CanvasComponent implements OnInit {
 	private mousePosition: Position;
 	private circles: Circle[];
 	private rectangles: Rectangle[];
+	private shape: E_Shape;
 
 	constructor(public ngZone: NgZone) {}
 
 	public ngOnInit(): void {
 		this.canvas = this.canvasRef.nativeElement;
-		this.context = this.canvas.getContext("2d");
+		this.context = this.canvas.getContext('2d');
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
-		this.circles = this.createCircles();
-		this.animate(E_Shape.CIRCLE);
-		// this.rectangles = this.createRectangles();
-		// this.animate(E_Shape.RECTANGLE);
+        this.shape = E_Shape.CIRCLE;
+        this[this.shape === E_Shape.RECTANGLE
+                ? 'rectangles'
+                : 'circles'
+            ] = this.shape == E_Shape.RECTANGLE
+                ? this.createRectangles()
+                : this.createCircles();
+		this.rectangles = this.createRectangles();
+		this.animate();
 	}
 
 	public onMouseOver(event: MouseEvent): void {
@@ -74,7 +81,7 @@ export class CanvasComponent implements OnInit {
 		const circles: Circle[] = [];
 		const dRange = 3;
 		for (let index = 0; index < this.numberOfCircles; index++) {
-			const radius: number = Math.floor(Math.random() * 50 + 1);
+			const radius: number = 10;
 			const randomX: number = Math.floor(Math.random() * window.innerWidth);
 			const randomY: number = Math.floor(Math.random() * window.innerHeight);
 			const randomDX: number = Math.random() * (dRange - -dRange) + -dRange;
@@ -94,9 +101,10 @@ export class CanvasComponent implements OnInit {
 		return circles;
 	}
 
-	private animate(shape: E_Shape): void {
+	private animate = () => {
+	    const shape = this.shape;
 		this.ngZone.runOutsideAngular(() =>
-			requestAnimationFrame(this.animate.bind(this, shape))
+			requestAnimationFrame(this.animate)
 		);
 		// clear canvas
 		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -122,6 +130,5 @@ export class CanvasComponent implements OnInit {
 			default:
 				break;
 		}
-		delete this.mousePosition;
 	}
 }
