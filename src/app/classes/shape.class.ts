@@ -1,4 +1,3 @@
-import { Circle } from './circle.class';
 import { Size } from './size.class';
 import { Position } from './position.class';
 
