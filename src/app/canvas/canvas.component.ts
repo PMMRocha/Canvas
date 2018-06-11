@@ -1,15 +1,15 @@
-import { Rectangle } from "./../classes/rectangle.class";
-import { Position } from "./../classes/position.class";
-import { Circle } from "./../classes/circle.class";
 import {
-	Component,
+    Component,
 	OnInit,
 	ViewChild,
 	ElementRef,
 	Input,
 	NgZone
 } from "@angular/core";
-import { defaultCircleColors, E_Shape } from "../utils/shape.utils";
+import { Rectangle } from "./../classes/rectangle.class";
+import { Circle } from "./../classes/circle.class";
+import { Position } from "./../classes/position.class";
+import { defaultCircleColors, E_Shape, T_Shape } from "../utils/shape.utils";
 
 @Component({
 	selector: "app-canvas",
@@ -18,14 +18,13 @@ import { defaultCircleColors, E_Shape } from "../utils/shape.utils";
 })
 export class CanvasComponent implements OnInit {
 	@ViewChild("canvas") public canvasRef: ElementRef;
-	@Input() private numberOfCircles = 400;
-	@Input() private numberOfRectangles = 400;
+	@Input() private shape: E_Shape = E_Shape.CIRCLE;
+	@Input() private numberOfShapes = 400;
 	@Input() private colors: string[] = defaultCircleColors;
 	private canvas: HTMLCanvasElement;
 	private context: CanvasRenderingContext2D;
 	private mousePosition: Position;
-	private circles: Circle[];
-	private rectangles: Rectangle[];
+	private shapes: T_Shape[];
 
 	constructor(public ngZone: NgZone) {}
 
@@ -34,20 +33,26 @@ export class CanvasComponent implements OnInit {
 		this.context = this.canvas.getContext("2d");
 		this.canvas.width = window.innerWidth;
 		this.canvas.height = window.innerHeight;
-		this.circles = this.createCircles();
-		this.animate(E_Shape.CIRCLE);
-		// this.rectangles = this.createRectangles();
-		// this.animate(E_Shape.RECTANGLE);
+		this.shapes = this.createShapes();
+		this.animate();
 	}
 
 	public onMouseOver(event: MouseEvent): void {
 		this.mousePosition = new Position(event.clientX, event.clientY);
 	}
 
+	private createShapes(): T_Shape[] {
+		switch (this.shape) {
+			case E_Shape.CIRCLE: return this.createCircles();
+			case E_Shape.RECTANGLE: return this.createRectangles();
+			default: new Error(`${this.shape} is not a valid shape`);
+		}
+	}
+
 	private createRectangles(): Rectangle[] {
 		const rectangles: Rectangle[] = [];
 		const dRange = 3;
-		for (let index = 0; index < this.numberOfRectangles; index++) {
+		for (let index = 0; index < this.numberOfShapes; index++) {
 			const width: number = Math.floor(Math.random() * 100 + 1);
 			const height: number = Math.floor(Math.random() * 100 + 1);
 			const randomX: number = Math.floor(Math.random() * window.innerWidth);
@@ -73,8 +78,8 @@ export class CanvasComponent implements OnInit {
 	private createCircles(): Circle[] {
 		const circles: Circle[] = [];
 		const dRange = 3;
-		for (let index = 0; index < this.numberOfCircles; index++) {
-			const radius: number = Math.floor(Math.random() * 50 + 1);
+		for (let index = 0; index < this.numberOfShapes; index++) {
+            const radius: number = Math.floor(Math.random() * 50 + 1);
 			const randomX: number = Math.floor(Math.random() * window.innerWidth);
 			const randomY: number = Math.floor(Math.random() * window.innerHeight);
 			const randomDX: number = Math.random() * (dRange - -dRange) + -dRange;
@@ -94,34 +99,17 @@ export class CanvasComponent implements OnInit {
 		return circles;
 	}
 
-	private animate(shape: E_Shape): void {
-		this.ngZone.runOutsideAngular(() =>
-			requestAnimationFrame(this.animate.bind(this, shape))
-		);
+	private animate = () => {
+		const shape = this.shape;
+		this.ngZone.runOutsideAngular(() => requestAnimationFrame(this.animate));
 		// clear canvas
-		this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
-		switch (shape) {
-			case E_Shape.CIRCLE:
-				// animate circles
-				this.circles.forEach((circle: Circle) =>
-					circle
-						.draw()
-						.resizeOnMouseOver(this.mousePosition)
-						.animate()
-				);
-				break;
-			case E_Shape.RECTANGLE:
-				// animate rectangles
-				this.rectangles.forEach((rectangle: Rectangle) =>
-					rectangle
-						.draw()
-						.resizeOnMouseOver(this.mousePosition)
-						.animate()
-				);
-				break;
-			default:
-				break;
-		}
-		delete this.mousePosition;
-	}
+        this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        this.shapes.forEach(
+            (shape: T_Shape) =>
+                shape
+                    .draw()
+                    .resizeOnMouseOver(this.mousePosition)
+                    .animate()
+            );
+	};
 }

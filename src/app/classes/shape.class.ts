@@ -1,4 +1,3 @@
-import { Circle } from './circle.class';
 import { Size } from './size.class';
 import { Position } from './position.class';
 
@@ -36,18 +35,14 @@ export class Shape {
     }
 
     protected resizeOnMouseOver(mousePosition: Position): void {
-        const resize: number = 3;
-        const range: number = 100;
-        if (
-            mousePosition &&
-			mousePosition.x > this.position.x - range &&
-			mousePosition.x < (this.position.x + this.size.width) + range &&
-			mousePosition.y > this.position.y - range &&
-			mousePosition.y < (this.position.y + this.size.height) + range
-		) {
-			this.size.increse(resize);
-        } else {
-			this.size.decrease(resize);
+	    if (mousePosition) {
+            const resize = 2;
+            const range = 100;
+            const diffX = this.position.x - mousePosition.x;
+            const diffY = this.position.y - mousePosition.y;
+            const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+            const factor = resize - Math.min(distance / range, 1) * resize + 1;
+            this.size.scale(factor);
         }
     }
 }
