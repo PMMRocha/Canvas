@@ -13,12 +13,11 @@ export class Rectangle extends Shape implements IShape<Rectangle> {
 		height: number = 50,
 		dx: number = 3,
 		dy: number = 3,
-		maxWidth: number = width * 2,
-		maxHeight: number = height * 2
+		maxResizeVal: number = width * 2
     ) {
         super(
             new Position(x, y),
-            new Size(width, height, maxWidth, maxHeight),
+            new Size(width, height, maxResizeVal),
             backgroundColor,
             dx,
             dy
@@ -44,8 +43,8 @@ export class Rectangle extends Shape implements IShape<Rectangle> {
 		return this;
     }
 
-    public resizeOnMouseOver(mousePosition: Position, resize?: number): Rectangle {
-		super.resizeOnMouseOver(mousePosition, resize);
+    public resizeOnMouseOver(mousePosition: Position): Rectangle {
+		super.resizeOnMouseOver(mousePosition);
 		return this;
 	}
 }

@@ -45,7 +45,7 @@ export class CanvasComponent implements OnInit {
 	}
 
 	public onMouseOver(event: MouseEvent): void {
-		this.mousePosition = new Position(event.clientX, event.clientY, this.mouseRange);
+		this.mousePosition = new Position(event.clientX, event.clientY);
 	}
     
     public onMouseLeave(): void {
@@ -78,7 +78,8 @@ export class CanvasComponent implements OnInit {
 				width,
 				height,
 				randomDX,
-				randomDY
+                randomDY,
+                this.resize
 			);
 			rectangles.push(rectangle);
 		}
@@ -101,7 +102,8 @@ export class CanvasComponent implements OnInit {
 				this.colors[randomColorIndex],
 				radius,
 				randomDX,
-				randomDY
+				randomDY,
+                this.resize
 			);
 			circles.push(circle);
 		}
@@ -117,7 +119,7 @@ export class CanvasComponent implements OnInit {
         this.shapes.forEach(
             (shape: T_Shape) => shape
                 .draw()
-                .resizeOnMouseOver(this.mousePosition, this.resize)
+                .resizeOnMouseOver(this.mousePosition)
                 .animate()
         );
 	};

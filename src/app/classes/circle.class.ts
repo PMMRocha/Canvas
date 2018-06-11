@@ -12,12 +12,11 @@ export class Circle extends Shape implements IShape<Circle> {
 		radius: number = 50,
 		dx: number = 3,
 		dy: number = 3,
-		maxWidth: number = radius * 4,
-		maxHeight: number = radius * 4
+		maxResizeVal: number = radius * 4
 	) {
 		super(
 			new Position(x - radius, y - radius),
-			new Size(radius * 2, radius * 2, maxWidth, maxHeight),
+			new Size(radius * 2, radius * 2, maxResizeVal),
 			backgroundColor,
 			dx,
 			dy
@@ -45,8 +44,8 @@ export class Circle extends Shape implements IShape<Circle> {
 		return this;
 	}
 
-	public resizeOnMouseOver(mousePosition: Position, resize?: number): Circle {
-		super.resizeOnMouseOver(mousePosition, resize);
+	public resizeOnMouseOver(mousePosition: Position): Circle {
+		super.resizeOnMouseOver(mousePosition);
 		return this;
 	}
 }

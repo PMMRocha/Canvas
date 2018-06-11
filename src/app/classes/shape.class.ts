@@ -34,12 +34,13 @@ export class Shape {
 		}
     }
 
-    protected resizeOnMouseOver(mousePosition: Position, resize: number = 2): void {
+    protected resizeOnMouseOver(mousePosition: Position): void {
 	    if (mousePosition) {
-            const diffX = this.position.x - mousePosition.x;
-            const diffY = this.position.y - mousePosition.y;
-            const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-            const factor = resize - Math.min(distance / mousePosition.range, 1) * resize + 1;
+            const resize: number = this.size.maxResizeVal;
+            const diffX: number = this.position.x - mousePosition.x;
+            const diffY: number = this.position.y - mousePosition.y;
+            const distance: number = Math.sqrt(diffX * diffX + diffY * diffY);
+            const factor: number = resize - Math.min(distance / mousePosition.range, 1) * resize + 1;
             this.size.scale(factor);
         }
     }
