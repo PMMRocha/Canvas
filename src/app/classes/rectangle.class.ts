@@ -44,8 +44,8 @@ export class Rectangle extends Shape implements IShape<Rectangle> {
 		return this;
     }
 
-    public resizeOnMouseOver(mousePosition: Position): Rectangle {
-        super.resizeOnMouseOver(mousePosition);
+    public resizeOnMouseOver(mousePosition: Position, resize?: number): Rectangle {
+		super.resizeOnMouseOver(mousePosition, resize);
 		return this;
-    }
+	}
 }

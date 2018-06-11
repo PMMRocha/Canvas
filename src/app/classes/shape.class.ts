@@ -6,8 +6,8 @@ export class Shape {
 		protected position: Position,
 		protected size: Size,
 		protected backgroundColor: string = 'black',
-		protected dx: number = 3,
-		protected dy: number = 3
+		protected dx: number = 2,
+		protected dy: number = 2
     ) {
 		this.position.repositionIfStuckOnWalls(this.size);
     }
@@ -34,14 +34,12 @@ export class Shape {
 		}
     }
 
-    protected resizeOnMouseOver(mousePosition: Position): void {
+    protected resizeOnMouseOver(mousePosition: Position, resize: number = 2): void {
 	    if (mousePosition) {
-            const resize = 2;
-            const range = 100;
             const diffX = this.position.x - mousePosition.x;
             const diffY = this.position.y - mousePosition.y;
             const distance = Math.sqrt(diffX * diffX + diffY * diffY);
-            const factor = resize - Math.min(distance / range, 1) * resize + 1;
+            const factor = resize - Math.min(distance / mousePosition.range, 1) * resize + 1;
             this.size.scale(factor);
         }
     }

@@ -17,10 +17,16 @@ import { defaultCircleColors, E_Shape, T_Shape } from "../utils/shape.utils";
 	styleUrls: ["./canvas.component.scss"]
 })
 export class CanvasComponent implements OnInit {
-	@ViewChild("canvas") public canvasRef: ElementRef;
+	@ViewChild("canvas") private canvasRef: ElementRef;
 	@Input() private shape: E_Shape = E_Shape.CIRCLE;
+	@Input() private width: number;
+	@Input() private height: number;
+	@Input() private dRange = 2;
+	@Input() private mouseRange = 100;
+	@Input() private resize = 2;
 	@Input() private numberOfShapes = 400;
 	@Input() private colors: string[] = defaultCircleColors;
+	@Input() private backgroundColor: string = 'white';
 	private canvas: HTMLCanvasElement;
 	private context: CanvasRenderingContext2D;
 	private mousePosition: Position;
@@ -32,13 +38,18 @@ export class CanvasComponent implements OnInit {
 		this.canvas = this.canvasRef.nativeElement;
 		this.context = this.canvas.getContext("2d");
 		this.canvas.width = window.innerWidth;
-		this.canvas.height = window.innerHeight;
+        this.canvas.height = window.innerHeight;
+        this.paintBackground();
 		this.shapes = this.createShapes();
 		this.animate();
 	}
 
 	public onMouseOver(event: MouseEvent): void {
-		this.mousePosition = new Position(event.clientX, event.clientY);
+		this.mousePosition = new Position(event.clientX, event.clientY, this.mouseRange);
+	}
+    
+    public onMouseLeave(): void {
+		this.mousePosition.range = 0;
 	}
 
 	private createShapes(): T_Shape[] {
@@ -51,14 +62,13 @@ export class CanvasComponent implements OnInit {
 
 	private createRectangles(): Rectangle[] {
 		const rectangles: Rectangle[] = [];
-		const dRange = 3;
 		for (let index = 0; index < this.numberOfShapes; index++) {
-			const width: number = Math.floor(Math.random() * 100 + 1);
-			const height: number = Math.floor(Math.random() * 100 + 1);
+			const width: number = this.width ? this.width : Math.floor(Math.random() * 100 + 1);
+			const height: number = this.height ? this.height : Math.floor(Math.random() * 100 + 1);
 			const randomX: number = Math.floor(Math.random() * window.innerWidth);
 			const randomY: number = Math.floor(Math.random() * window.innerHeight);
-			const randomDX: number = Math.random() * (dRange - -dRange) + -dRange;
-			const randomDY: number = Math.random() * (dRange - -dRange) + -dRange;
+			const randomDX: number = Math.random() * (this.dRange - -this.dRange) + -this.dRange;
+			const randomDY: number = Math.random() * (this.dRange - -this.dRange) + -this.dRange;
 			const randomColorIndex = Math.floor(Math.random() * this.colors.length);
 			const rectangle: Rectangle = new Rectangle(
 				this.context,
@@ -77,13 +87,12 @@ export class CanvasComponent implements OnInit {
 
 	private createCircles(): Circle[] {
 		const circles: Circle[] = [];
-		const dRange = 3;
 		for (let index = 0; index < this.numberOfShapes; index++) {
-            const radius: number = Math.floor(Math.random() * 50 + 1);
+            const radius: number = this.width ? this.width / 2 : Math.floor(Math.random() * 50 + 1);
 			const randomX: number = Math.floor(Math.random() * window.innerWidth);
 			const randomY: number = Math.floor(Math.random() * window.innerHeight);
-			const randomDX: number = Math.random() * (dRange - -dRange) + -dRange;
-			const randomDY: number = Math.random() * (dRange - -dRange) + -dRange;
+			const randomDX: number = Math.random() * (this.dRange - -this.dRange) + -this.dRange;
+			const randomDY: number = Math.random() * (this.dRange - -this.dRange) + -this.dRange;
 			const randomColorIndex = Math.floor(Math.random() * this.colors.length);
 			const circle: Circle = new Circle(
 				this.context,
@@ -99,17 +108,22 @@ export class CanvasComponent implements OnInit {
 		return circles;
 	}
 
-	private animate = () => {
-		const shape = this.shape;
+	private animate = (): void => {
 		this.ngZone.runOutsideAngular(() => requestAnimationFrame(this.animate));
 		// clear canvas
         this.context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+        // repaint canvas
+        this.paintBackground();
         this.shapes.forEach(
-            (shape: T_Shape) =>
-                shape
-                    .draw()
-                    .resizeOnMouseOver(this.mousePosition)
-                    .animate()
-            );
+            (shape: T_Shape) => shape
+                .draw()
+                .resizeOnMouseOver(this.mousePosition, this.resize)
+                .animate()
+        );
 	};
+
+    private paintBackground(): void {
+        this.context.fillStyle = this.backgroundColor;
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
 }

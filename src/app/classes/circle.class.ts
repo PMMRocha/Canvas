@@ -45,8 +45,8 @@ export class Circle extends Shape implements IShape<Circle> {
 		return this;
 	}
 
-	public resizeOnMouseOver(mousePosition: Position): Circle {
-		super.resizeOnMouseOver(mousePosition);
+	public resizeOnMouseOver(mousePosition: Position, resize?: number): Circle {
+		super.resizeOnMouseOver(mousePosition, resize);
 		return this;
 	}
 }

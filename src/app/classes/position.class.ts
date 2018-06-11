@@ -3,11 +3,14 @@ import { Size } from './size.class';
 export class Position {
     constructor(
       private _x: number,
-      private _y: number
+      private _y: number,
+      private _range: number = 100
     ) {}
 
     get x() { return this._x; }
     get y() { return this._y; }
+    get range() { return this._range; }
+    set range(range: number) { this._range = range; }
 
     public moveX( offset: number ): void { this._x += offset; }
 
